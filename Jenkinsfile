@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'your-docker-image-name'
+        DOCKER_IMAGE = 'yashigupta5108/my-flask-app'
     }
 
     stages {
         stage('Build') {
             steps {
                 // Clone the repository
-                git 'https://github.com/your-username/your-repo.git'
+                git 'https://github.com/Yashi5108/devOps_app.git'
 
                 // Build Docker image
                 script {
@@ -21,19 +21,19 @@ pipeline {
             steps {
                 // Push Docker image to registry
                 script {
-                    docker.withRegistry('https://your.registry.url', 'credentials-id-for-registry') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         docker.image(env.DOCKER_IMAGE).push('latest')
                     }
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Minikube') {
             steps {
-                // Deploy to Kubernetes
+                // Deploy to Minikube using Kubeconfig
                 script {
                     kubernetesDeploy(
-                        kubeconfigId: 'your-kubeconfig-credentials-id',
-                        configs: 'your-k8s-deployment-file.yml',
+                        kubeconfigId: 'minikube-kubeconfig',
+                        configs: 'deployment.yaml',
                         enableConfigSubstitution: true
                     )
                 }
